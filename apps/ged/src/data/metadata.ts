@@ -48,7 +48,7 @@ const EXPLICIT: Record<string, DocumentMetadata> = {
     ],
     entities: {
       people: ["Rafael Costa", "Marina Alves"],
-      organizations: ["Vale Verde Ltda.", "Empresa S.A."],
+      organizations: ["Vale Verde Ltda.", "Campolongo S.A."],
       dates: [
         { label: "Assinatura", value: "22 jul 2026" },
         { label: "Vencimento", value: "12 mai 2028" },

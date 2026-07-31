@@ -2,6 +2,9 @@
 // usuário aparecem na biblioteca e podem ser abertos de verdade (imagem/PDF via
 // object URL). Não persistem em refresh — é uma demonstração funcional.
 
+// Data
+import { CURRENT_USER_ID } from "./users";
+
 // Types
 import type { DocumentKind, GedDocument } from "@/types/ged";
 
@@ -51,8 +54,8 @@ export function addUpload(file: File): GedDocument {
     folderId: "",
     classification: "interno",
     status: "draft",
-    department: "TI",
-    ownerId: "u-edwin",
+    department: "Comercial",
+    ownerId: CURRENT_USER_ID,
     tags: ["upload", "sessão"],
     sizeKb,
     pages: 1,
@@ -60,18 +63,19 @@ export function addUpload(file: File): GedDocument {
     createdAt: nowIso,
     updatedAt: nowIso,
     versions: [
-      { version: "v1", label: "Envio", authorId: "u-edwin", at: nowIso, sizeKb, note: "Enviado nesta sessão" },
+      { version: "v1", label: "Envio", authorId: CURRENT_USER_ID, at: nowIso, sizeKb, note: "Enviado nesta sessão" },
     ],
-    activity: [{ id: "a1", actorId: "u-edwin", action: "upload", at: nowIso }],
+    activity: [{ id: "a1", actorId: CURRENT_USER_ID, action: "upload", at: nowIso }],
     permissions: [
-      { subjectType: "user", subjectId: "u-edwin", level: "owner" },
+      { subjectType: "user", subjectId: CURRENT_USER_ID, level: "owner" },
       { subjectType: "role", subjectId: "admin", level: "owner" },
     ],
     favorite: false,
   };
 
   UPLOADS.unshift(doc);
-  if (typeof URL !== "undefined" && isPreviewable(kind)) {
+  // Object URL para qualquer tipo: imagem/PDF pré-visualizam; os demais abrem/baixam.
+  if (typeof URL !== "undefined") {
     FILE_URLS.set(id, URL.createObjectURL(file));
   }
   return doc;

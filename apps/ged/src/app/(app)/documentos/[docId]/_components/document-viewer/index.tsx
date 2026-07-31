@@ -4,7 +4,10 @@
 import { useState } from "react";
 
 // Libs
-import { ChevronLeft, ChevronRight, Maximize2, Minus, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, ExternalLink, Maximize2, Minus, Plus } from "lucide-react";
+
+// Components
+import DocTypeIcon from "@/components/DocTypeIcon";
 
 // Services
 import { useAiInsight } from "@/services/documents";
@@ -89,7 +92,7 @@ export default function DocumentViewer({ document }: DocumentViewerProps) {
               title={document.name}
               className="h-full min-h-[70vh] w-full max-w-[820px] rounded-[6px] bg-white shadow-[0_10px_40px_-16px_rgba(0,0,0,0.35)]"
             />
-          ) : (
+          ) : document.kind === "image" ? (
             <div className="w-full max-w-[640px]">
               <div className={cn(PAPER, "overflow-hidden p-2")}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -97,6 +100,8 @@ export default function DocumentViewer({ document }: DocumentViewerProps) {
                 <p className="px-1 py-2 text-[11px] text-neutral-500">{document.name}</p>
               </div>
             </div>
+          ) : (
+            <UploadFallback url={uploadUrl} document={document} />
           )
         ) : (
         <div
@@ -277,6 +282,43 @@ function SpreadsheetPreview({ document }: { document: GedDocument }) {
           </tr>
         </tbody>
       </table>
+    </div>
+  );
+}
+
+// Arquivo enviado que o navegador não pré-visualiza nativamente (docx, xlsx, pptx…).
+function UploadFallback({ url, document }: { url: string; document: GedDocument }) {
+  return (
+    <div className="w-full max-w-[440px]">
+      <div className={cn(PAPER, "flex flex-col items-center gap-4 px-8 py-12 text-center")}>
+        <DocTypeIcon kind={document.kind} size="xl" />
+        <div>
+          <p className="text-[15px] font-semibold text-neutral-800">{document.name}</p>
+          <p className="mt-1 text-[12.5px] leading-relaxed text-neutral-500">
+            Este tipo de arquivo não é pré-visualizado no navegador. Abra ou baixe o arquivo
+            enviado — no ambiente real, abriria direto no Microsoft 365.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <a
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className="flex h-9 items-center gap-2 rounded-full bg-neutral-900 px-4 text-[13px] font-medium text-white transition-colors hover:bg-neutral-800"
+          >
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            Abrir arquivo
+          </a>
+          <a
+            href={url}
+            download={document.name}
+            className="flex h-9 items-center gap-2 rounded-full border border-neutral-200 px-4 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+          >
+            <Download className="h-3.5 w-3.5" aria-hidden="true" />
+            Baixar
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

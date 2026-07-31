@@ -17,7 +17,7 @@ export const USERS: GedUser[] = [
   {
     id: "u-luiz",
     name: "Luiz Campolongo",
-    email: "luiz.campolongo@empresa.com",
+    email: "luiz.campolongo@campolongo.com.br",
     role: "admin",
     department: "Comercial",
     initials: "LC",
@@ -27,7 +27,7 @@ export const USERS: GedUser[] = [
 ];
 
 /** Usuário atualmente logado nesta simulação. */
-export const CURRENT_USER_ID = "u-edwin";
+export const CURRENT_USER_ID = "u-luiz";
 
 /** IDs válidos após a redução para dois usuários. */
 export const ALLOWED_USER_IDS = new Set(USERS.map((u) => u.id));

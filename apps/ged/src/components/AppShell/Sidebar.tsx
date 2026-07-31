@@ -266,7 +266,7 @@ function SidebarInner() {
                   <span className="relative h-1.5 w-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20" aria-hidden="true" />
                 </span>
               </p>
-              <p className="truncate text-[11px] text-ink-muted">empresa.onmicrosoft.com</p>
+              <p className="truncate text-[11px] text-ink-muted">campolongo.onmicrosoft.com</p>
             </div>
             <ChevronRight className="h-4 w-4 shrink-0 text-ink-faint transition-all group-hover:translate-x-0.5 group-hover:text-brand-500" aria-hidden="true" />
           </div>
