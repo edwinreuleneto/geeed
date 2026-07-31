@@ -89,14 +89,17 @@ function SidebarInner() {
           type="button"
           className="group flex w-full items-center gap-3 rounded-xl px-1.5 py-1.5 text-left transition-colors hover:bg-black/[0.04]"
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-ink text-[15px] font-semibold text-surface-elevated">
-            G
+          <span
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] text-[15px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22)]"
+            style={{ backgroundImage: "linear-gradient(140deg, #0a84ff 0%, #0071e3 55%, #0058b0 100%)" }}
+          >
+            C
           </span>
           <span className="flex min-w-0 flex-1 flex-col items-start leading-none">
-            <span className="text-[15px] font-semibold tracking-tight text-ink">GED</span>
-            <span className="mt-1 text-[12px] text-ink-muted">Documentos · SharePoint</span>
+            <span className="text-[15px] font-semibold tracking-tight text-ink">Campolongo</span>
+            <span className="mt-1 text-[12px] text-ink-muted">GED · Microsoft 365</span>
           </span>
-          <ChevronsUpDown className="h-4 w-4 shrink-0 text-ink-faint" aria-hidden="true" />
+          <ChevronsUpDown className="h-4 w-4 shrink-0 text-ink-faint transition-colors group-hover:text-ink-soft" aria-hidden="true" />
         </button>
       </div>
 
@@ -233,37 +236,56 @@ function SidebarInner() {
 
       {/* Rodapé */}
       <div className="relative p-3">
-        {/* Status da conta Microsoft 365 */}
+        {/* Status da conta Microsoft 365 — vivo/interativo */}
         <Link
           href="/conectores"
-          className="group mb-2 block overflow-hidden rounded-xl border border-hairline bg-surface-elevated transition-all hover:border-hairline-strong hover:soft-shadow"
+          className="group relative mb-2 block overflow-hidden rounded-xl border border-hairline bg-surface-elevated transition-all hover:border-brand-200 hover:soft-shadow"
         >
-          <div className="flex items-center gap-2.5 px-2.5 py-2.5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-alt ring-1 ring-hairline">
-              <MicrosoftLogo className="h-[18px] w-[18px]" />
+          {/* brilho suave que pulsa no fundo */}
+          <span
+            className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full opacity-60 animate-halo-pulse"
+            style={{ background: "radial-gradient(closest-side, rgba(0,113,227,0.28), transparent 70%)" }}
+            aria-hidden="true"
+          />
+
+          <div className="relative flex items-center gap-2.5 px-2.5 py-2.5">
+            <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-alt ring-1 ring-hairline">
+              {/* halo pulsante atrás do logo */}
+              <span
+                className="absolute inset-0 rounded-lg opacity-70 animate-halo-pulse"
+                style={{ boxShadow: "0 0 0 3px rgba(0,113,227,0.12)" }}
+                aria-hidden="true"
+              />
+              <MicrosoftLogo className="relative h-[18px] w-[18px]" />
             </span>
             <div className="min-w-0 flex-1 leading-tight">
               <p className="flex items-center gap-1.5 text-[12.5px] font-semibold text-ink">
                 Microsoft 365
-                <span className="relative flex h-1.5 w-1.5 items-center justify-center">
-                  <span
-                    className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-70"
-                    style={{ animation: "ping-soft 2.4s cubic-bezier(0, 0, 0.2, 1) infinite" }}
-                    aria-hidden="true"
-                  />
-                  <span className="relative h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                <span className="relative flex h-2 w-2 items-center justify-center">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 animate-ping-soft" aria-hidden="true" />
+                  <span className="relative h-1.5 w-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20" aria-hidden="true" />
                 </span>
               </p>
               <p className="truncate text-[11px] text-ink-muted">empresa.onmicrosoft.com</p>
             </div>
-            <ChevronRight className="h-4 w-4 shrink-0 text-ink-faint transition-colors group-hover:text-ink-muted" aria-hidden="true" />
+            <ChevronRight className="h-4 w-4 shrink-0 text-ink-faint transition-all group-hover:translate-x-0.5 group-hover:text-brand-500" aria-hidden="true" />
           </div>
-          <div className="flex items-center gap-1.5 border-t border-hairline bg-surface-alt/40 px-2.5 py-1.5">
+
+          <div className="relative flex items-center gap-1.5 border-t border-hairline bg-surface-alt/40 px-2.5 py-1.5">
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wide text-emerald-700">
+              <span className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
               Conectado
             </span>
-            <span className="truncate text-[10.5px] text-ink-muted">SharePoint & Teams · sync há minutos</span>
+            <span className="truncate text-[10.5px] text-ink-muted">SharePoint &amp; Teams · sincronizando</span>
           </div>
+
+          {/* barra de sync ao vivo (shimmer) */}
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] overflow-hidden bg-brand-100/60" aria-hidden="true">
+            <span
+              className="block h-full w-1/3 rounded-full animate-progress-indeterminate"
+              style={{ background: "linear-gradient(90deg, transparent, #0071e3, transparent)" }}
+            />
+          </span>
         </Link>
 
         <div className="flex items-center gap-2.5 rounded-xl bg-black/[0.03] p-2 transition-colors hover:bg-black/[0.05]">

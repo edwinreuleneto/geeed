@@ -22,14 +22,14 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "GED",
-    template: "%s · GED",
+    default: "Campolongo · GED",
+    template: "%s · Campolongo",
   },
-  description: "Gestão Eletrônica de Documentos — segura, rastreável e conectada",
+  description: "Campolongo — Gestão Eletrônica de Documentos, segura e conectada ao Microsoft 365",
   robots: { index: false, follow: false },
   openGraph: {
-    title: "GED",
-    description: "Gestão Eletrônica de Documentos — segura, rastreável e conectada",
+    title: "Campolongo · GED",
+    description: "Gestão Eletrônica de Documentos, segura e conectada ao Microsoft 365",
     type: "website",
   },
 };
