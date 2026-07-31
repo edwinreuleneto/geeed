@@ -7,8 +7,12 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 // Libs
+import { AnimatePresence } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
+
+// Components
+import UploadSync from "../upload-sync";
 
 // Data
 import { addUpload } from "@/data/uploads";
@@ -16,27 +20,37 @@ import { addUpload } from "@/data/uploads";
 // Services
 import { documentsKeys } from "@/services/documents";
 
+// Types
+import type { GedDocument } from "@/types/ged";
+
 export default function UploadButton() {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [added, setAdded] = useState<string | null>(null);
+  const [sync, setSync] = useState<{ docs: GedDocument[]; label: string } | null>(null);
 
   function onFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
     const list = Array.from(files);
     const docs = list.map(addUpload);
+    const label = docs.length === 1 ? docs[0]!.name : `${docs.length} arquivos`;
+    setSync({ docs, label });
+  }
 
+  function handleComplete() {
+    // Só agora o documento "aparece" na biblioteca — o efeito mágico do sync.
     queryClient.invalidateQueries({ queryKey: documentsKeys.all });
     queryClient.invalidateQueries({ queryKey: documentsKeys.folders() });
+  }
 
-    setAdded(docs.length === 1 ? docs[0]!.name : `${docs.length} arquivos`);
-    router.push("/documentos");
-    window.setTimeout(() => setAdded(null), 4000);
+  function handleView() {
+    const id = sync?.docs[0]?.id;
+    setSync(null);
+    if (id) router.push(`/documentos/${id}`);
   }
 
   return (
-    <div className="relative">
+    <>
       <input
         ref={inputRef}
         type="file"
@@ -56,19 +70,17 @@ export default function UploadButton() {
         Enviar documento
       </button>
 
-      {added ? (
-        <div className="absolute right-0 top-12 z-10 flex w-72 animate-fade-rise items-start gap-2.5 rounded-xl border border-hairline bg-surface-elevated p-3 soft-shadow-lg">
-          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-            <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-[12.5px] font-medium text-ink">Enviado nesta sessão</p>
-            <p className="mt-0.5 truncate text-[11.5px] text-ink-muted" title={added}>
-              {added} · disponível na biblioteca
-            </p>
-          </div>
-        </div>
-      ) : null}
-    </div>
+      <AnimatePresence>
+        {sync ? (
+          <UploadSync
+            fileLabel={sync.label}
+            kind={sync.docs[0]!.kind}
+            onComplete={handleComplete}
+            onView={handleView}
+            onClose={() => setSync(null)}
+          />
+        ) : null}
+      </AnimatePresence>
+    </>
   );
 }

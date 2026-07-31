@@ -11,6 +11,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import {
   BarChart3,
   ChevronDown,
+  ChevronRight,
   ChevronsUpDown,
   FileSignature,
   FolderOpen,
@@ -29,6 +30,7 @@ import {
 
 // Components
 import UserAvatar from "@/components/UserAvatar";
+import MicrosoftLogo from "@/components/MicrosoftLogo";
 import { useCommandPalette } from "@/components/CommandPalette";
 
 // Services
@@ -231,25 +233,40 @@ function SidebarInner() {
 
       {/* Rodapé */}
       <div className="relative p-3">
+        {/* Status da conta Microsoft 365 */}
         <Link
           href="/conectores"
-          className="mb-1 flex items-center gap-2.5 rounded-[10px] px-2.5 py-2 transition-colors hover:bg-black/[0.04]"
+          className="group mb-2 block overflow-hidden rounded-xl border border-hairline bg-surface-elevated transition-all hover:border-hairline-strong hover:soft-shadow"
         >
-          <span className="relative flex h-2 w-2 shrink-0 items-center justify-center">
-            <span
-              className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60"
-              style={{ animation: "ping-soft 2.4s cubic-bezier(0, 0, 0.2, 1) infinite" }}
-              aria-hidden="true"
-            />
-            <span className="relative h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-          </span>
-          <div className="min-w-0 flex-1 leading-tight">
-            <p className="text-[13px] font-medium text-ink">SharePoint sincronizado</p>
-            <p className="mt-0.5 truncate text-[11.5px] text-ink-muted">última sync há poucos minutos</p>
+          <div className="flex items-center gap-2.5 px-2.5 py-2.5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-alt ring-1 ring-hairline">
+              <MicrosoftLogo className="h-[18px] w-[18px]" />
+            </span>
+            <div className="min-w-0 flex-1 leading-tight">
+              <p className="flex items-center gap-1.5 text-[12.5px] font-semibold text-ink">
+                Microsoft 365
+                <span className="relative flex h-1.5 w-1.5 items-center justify-center">
+                  <span
+                    className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-70"
+                    style={{ animation: "ping-soft 2.4s cubic-bezier(0, 0, 0.2, 1) infinite" }}
+                    aria-hidden="true"
+                  />
+                  <span className="relative h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                </span>
+              </p>
+              <p className="truncate text-[11px] text-ink-muted">empresa.onmicrosoft.com</p>
+            </div>
+            <ChevronRight className="h-4 w-4 shrink-0 text-ink-faint transition-colors group-hover:text-ink-muted" aria-hidden="true" />
+          </div>
+          <div className="flex items-center gap-1.5 border-t border-hairline bg-surface-alt/40 px-2.5 py-1.5">
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wide text-emerald-700">
+              Conectado
+            </span>
+            <span className="truncate text-[10.5px] text-ink-muted">SharePoint & Teams · sync há minutos</span>
           </div>
         </Link>
 
-        <div className="mt-1 flex items-center gap-2.5 rounded-xl bg-black/[0.03] p-2 transition-colors hover:bg-black/[0.05]">
+        <div className="flex items-center gap-2.5 rounded-xl bg-black/[0.03] p-2 transition-colors hover:bg-black/[0.05]">
           {user ? (
             <>
               <UserAvatar user={user} size="md" showStatus />
