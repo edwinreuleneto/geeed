@@ -1,0 +1,8 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Não usamos otimização de imagem nativa (sharp) neste app — dispensamos o build nativo
+# para manter a instalação limpa e sem prompts de aprovação.
+allowBuilds:
+  sharp: false

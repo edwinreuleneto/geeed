@@ -1,0 +1,11 @@
+{
+  "name": "@ged/config",
+  "version": "0.0.1",
+  "private": true,
+  "files": ["tsconfig"],
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
+    "./tsconfig/react-library.json": "./tsconfig/react-library.json"
+  }
+}
