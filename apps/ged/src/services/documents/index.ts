@@ -1,5 +1,11 @@
 // Libs
-import { keepPreviousData, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 
 // Data
 import { db } from "@/data";
@@ -8,7 +14,7 @@ import { db } from "@/data";
 import { canView } from "@/utils/access";
 
 // Types
-import type { GedDocument, GedUser } from "@/types/ged";
+import type { Classification, GedDocument, GedUser, Permission } from "@/types/ged";
 import type { DocumentFilters } from "./documents.types";
 
 // --- Fonte de dados (mock hoje; API amanhã) -----------------------------------
@@ -160,6 +166,32 @@ export function useCurrentUserQuery() {
   return useQuery({
     queryKey: documentsKeys.currentUser(),
     queryFn: () => db.currentUser(),
+  });
+}
+
+// --- Mutations ----------------------------------------------------------------
+
+/** Altera a classificação (sensibilidade) de um documento. */
+export function useSetClassification() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { docId: string; classification: Classification }) =>
+      db.setClassification(input.docId, input.classification),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: documentsKeys.all });
+    },
+  });
+}
+
+/** Substitui as permissões de um documento. */
+export function useSetPermissions() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { docId: string; permissions: Permission[] }) =>
+      db.setPermissions(input.docId, input.permissions),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: documentsKeys.all });
+    },
   });
 }
 

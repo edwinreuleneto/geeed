@@ -19,6 +19,7 @@ import DocumentViewer from "../document-viewer";
 import MetadataPanel from "../metadata-panel";
 import DetailTabs from "../detail-tabs";
 import AiPanel from "../ai-panel";
+import PublishButton from "../publish-button";
 
 // Services
 import {
@@ -31,6 +32,7 @@ import {
 // Utils
 import { cn } from "@/lib/utils";
 import { canDownload, canEdit } from "@/utils/access";
+import { canSubmitForApproval } from "@/utils/approvals";
 import { formatRelative } from "@/utils/format";
 
 interface DocumentDetailProps {
@@ -50,6 +52,7 @@ export default function DocumentDetail({ docId }: DocumentDetailProps) {
   const folder = folders.find((f) => f.id === document.folderId);
   const downloadable = canDownload(document, currentUser);
   const editable = canEdit(document, currentUser);
+  const publishable = canSubmitForApproval(document, currentUser);
 
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 animate-fade-rise px-4 py-6 md:px-8 md:py-8">
@@ -89,6 +92,7 @@ export default function DocumentDetail({ docId }: DocumentDetailProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          {publishable ? <PublishButton document={document} users={users} /> : null}
           <ActionButton disabled title="Compartilhamento em breve">
             <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
             Compartilhar

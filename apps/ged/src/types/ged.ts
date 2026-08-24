@@ -5,7 +5,7 @@ export type DocumentKind = "pdf" | "docx" | "xlsx" | "pptx" | "image" | "cad" | 
 
 export type Classification = "publico" | "interno" | "confidencial" | "restrito";
 
-export type DocumentStatus = "draft" | "review" | "approved" | "archived";
+export type DocumentStatus = "draft" | "review" | "in_approval" | "approved" | "archived";
 
 export type DocumentSource = "sharepoint" | "upload" | "scan";
 
@@ -66,12 +66,34 @@ export interface Permission {
   level: PermissionLevel;
 }
 
+// --- Aprovação (fluxo sequencial multinível) ----------------------------------
+
+export type ApprovalDecision = "pending" | "approved" | "rejected";
+
+export interface ApprovalStep {
+  order: number; // 1-based, define a sequência da cadeia
+  label: string; // "Responsável da área", "Diretoria", "Etapa N"
+  approverId: string; // usuário responsável por esta etapa
+  decision: ApprovalDecision;
+  decidedAt?: string; // ISO
+  comment?: string;
+}
+
+export interface DocumentApproval {
+  state: "in_progress" | "approved" | "rejected";
+  currentStep: number; // order da etapa ativa (após concluído, aponta além da última)
+  submittedById: string;
+  submittedAt: string; // ISO
+  steps: ApprovalStep[];
+}
+
 export interface Folder {
   id: string;
   name: string;
   description: string;
   icon: string; // nome do ícone lucide
   accent: { bg: string; text: string };
+  parentId?: string | null; // pasta pai; ausente/null = raiz
 }
 
 export interface AiInsight {
@@ -137,4 +159,5 @@ export interface GedDocument {
   activity: ActivityEvent[];
   permissions: Permission[];
   favorite: boolean;
+  approval?: DocumentApproval; // presente após publicar para aprovação
 }

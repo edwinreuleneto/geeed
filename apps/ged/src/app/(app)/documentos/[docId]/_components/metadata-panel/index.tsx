@@ -1,5 +1,8 @@
 "use client";
 
+// React
+import { useState } from "react";
+
 // Libs
 import {
   Archive,
@@ -7,6 +10,7 @@ import {
   Building2,
   Calendar,
   CalendarClock,
+  ChevronDown,
   CircleDollarSign,
   FileSignature,
   FileText,
@@ -60,10 +64,12 @@ const ICONS: Record<string, LucideIcon> = {
 interface MetadataPanelProps {
   docId: string;
   now: number;
+  defaultOpen?: boolean;
 }
 
-export default function MetadataPanel({ docId, now }: MetadataPanelProps) {
+export default function MetadataPanel({ docId, now, defaultOpen = false }: MetadataPanelProps) {
   const { data: meta } = useDocumentMetadata(docId);
+  const [open, setOpen] = useState(defaultOpen);
   if (!meta) return null;
 
   const { entities } = meta;
@@ -76,7 +82,12 @@ export default function MetadataPanel({ docId, now }: MetadataPanelProps) {
 
   return (
     <section className="overflow-hidden rounded-[18px] bg-surface-elevated ring-1 ring-hairline">
-      <header className="flex items-center gap-2 border-b border-hairline px-4 py-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 px-4 py-3 text-left transition-colors hover:bg-surface/60"
+      >
         <h2 className="text-[13.5px] font-semibold text-ink">Metadados</h2>
         <span className="rounded-full bg-surface-alt px-2 py-0.5 text-[11px] font-medium text-ink-muted">
           {meta.contentType}
@@ -85,9 +96,15 @@ export default function MetadataPanel({ docId, now }: MetadataPanelProps) {
           <Sparkles className="h-3 w-3" aria-hidden="true" />
           {meta.aiFieldsFilled} por IA
         </span>
-      </header>
+        <ChevronDown
+          className={cn("h-4 w-4 shrink-0 text-ink-faint transition-transform", open ? "" : "-rotate-90")}
+          aria-hidden="true"
+        />
+      </button>
 
-      <ul className="flex flex-col px-4">
+      {open ? (
+      <>
+      <ul className="flex flex-col border-t border-hairline px-4">
         {meta.fields.map((field) => (
           <FieldRow key={field.key} field={field} />
         ))}
@@ -112,6 +129,8 @@ export default function MetadataPanel({ docId, now }: MetadataPanelProps) {
       <p className="border-t border-hairline px-4 py-2.5 text-[11px] text-ink-faint">
         Extraído por IA · {formatRelative(meta.extractedAt, now)} · confira antes de decisões críticas.
       </p>
+      </>
+      ) : null}
     </section>
   );
 }

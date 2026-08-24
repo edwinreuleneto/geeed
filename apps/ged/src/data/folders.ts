@@ -46,4 +46,38 @@ export const FOLDERS: Folder[] = [
     icon: "ShieldCheck",
     accent: { bg: "bg-rose-50", text: "text-rose-600" },
   },
+
+  // --- Subpastas (hierarquia aninhada) ----------------------------------------
+  {
+    id: "f-contratos-2026",
+    name: "2026",
+    description: "Contratos e aditivos do exercício de 2026",
+    icon: "FileSignature",
+    accent: { bg: "bg-brand-50", text: "text-brand-600" },
+    parentId: "f-contratos",
+  },
+  {
+    id: "f-contratos-fornecedores",
+    name: "Fornecedores",
+    description: "Acordos de fornecimento e SLAs",
+    icon: "FileSignature",
+    accent: { bg: "bg-brand-50", text: "text-brand-600" },
+    parentId: "f-contratos-2026",
+  },
+  {
+    id: "f-rh-admissoes",
+    name: "Admissões",
+    description: "Documentos de contratação e onboarding",
+    icon: "Users",
+    accent: { bg: "bg-sky-50", text: "text-sky-600" },
+    parentId: "f-rh",
+  },
+  {
+    id: "f-projetos-plantas",
+    name: "Plantas & CAD",
+    description: "Desenhos técnicos e arquivos de engenharia",
+    icon: "Ruler",
+    accent: { bg: "bg-violet-50", text: "text-violet-600" },
+    parentId: "f-projetos",
+  },
 ];

@@ -7,7 +7,7 @@ import type { StatusBadgeProps } from "./status-badge.types";
 
 export default function StatusBadge({ status, size = "sm" }: StatusBadgeProps) {
   const tone = STATUS[status];
-  const pulse = status === "review";
+  const pulse = status === "review" || status === "in_approval";
 
   return (
     <span

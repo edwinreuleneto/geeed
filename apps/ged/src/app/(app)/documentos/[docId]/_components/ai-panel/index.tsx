@@ -4,7 +4,7 @@
 import { useMemo, useState } from "react";
 
 // Libs
-import { Check, CornerDownLeft, Sparkles, Tag } from "lucide-react";
+import { Check, ChevronDown, CornerDownLeft, Sparkles, Tag } from "lucide-react";
 
 // Services
 import { useAiInsight } from "@/services/documents";
@@ -17,10 +17,12 @@ import { semanticScore } from "@/utils/semantic";
 interface AiPanelProps {
   docId: string;
   now: number;
+  defaultOpen?: boolean;
 }
 
-export default function AiPanel({ docId, now }: AiPanelProps) {
+export default function AiPanel({ docId, now, defaultOpen = true }: AiPanelProps) {
   const { data: insight } = useAiInsight(docId);
+  const [open, setOpen] = useState(defaultOpen);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<string | null>(null);
 
@@ -53,7 +55,12 @@ export default function AiPanel({ docId, now }: AiPanelProps) {
 
   return (
     <section className="overflow-hidden rounded-xl border border-hairline bg-surface-elevated">
-      <header className="flex items-center gap-2 border-b border-hairline px-4 py-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 px-4 py-3 text-left transition-colors hover:bg-surface/60"
+      >
         <span className="flex h-6 w-6 items-center justify-center rounded-md bg-brand-50 text-brand-600">
           <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
         </span>
@@ -61,9 +68,14 @@ export default function AiPanel({ docId, now }: AiPanelProps) {
         <span className="ml-auto rounded-full bg-surface-alt px-2 py-0.5 text-[10.5px] font-medium text-ink-muted">
           IA · {confidencePct}%
         </span>
-      </header>
+        <ChevronDown
+          className={cn("h-4 w-4 shrink-0 text-ink-faint transition-transform", open ? "" : "-rotate-90")}
+          aria-hidden="true"
+        />
+      </button>
 
-      <div className="flex flex-col gap-3.5 p-4">
+      {open ? (
+      <div className="flex flex-col gap-3.5 border-t border-hairline p-4">
         <p className="text-[12.5px] leading-relaxed text-ink-soft">{insight.summary}</p>
 
         <div>
@@ -152,6 +164,7 @@ export default function AiPanel({ docId, now }: AiPanelProps) {
           críticas.
         </p>
       </div>
+      ) : null}
     </section>
   );
 }

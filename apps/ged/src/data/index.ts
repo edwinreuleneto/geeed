@@ -11,15 +11,20 @@ import { AI_INSIGHTS } from "./ai";
 import { TEAMS } from "./teams";
 import { getMetadata } from "./metadata";
 import { UPLOADS } from "./uploads";
+import { getResponsibles, setDepartmentChain } from "./responsibles";
+import { getDepartments, addDepartment, removeDepartment } from "./departments";
+import { submitForApproval, decideApproval, setClassification, setPermissions } from "./mutations";
 
 // Types
 import type {
   AiInsight,
+  Classification,
   DocumentKind,
   DocumentMetadata,
   GedDocument,
   Folder,
   GedUser,
+  Permission,
   PermissionLevel,
 } from "@/types/ged";
 import type { ConnectorStatus } from "./connectors";
@@ -65,6 +70,10 @@ function remapDocument(doc: GedDocument): GedDocument {
     if (!existing || LEVEL_RANK[p.level] > LEVEL_RANK[existing.level]) byKey.set(key, p);
   }
   doc.permissions = [...byKey.values()];
+  if (doc.approval) {
+    doc.approval.submittedById = remapUserId(doc.approval.submittedById);
+    for (const step of doc.approval.steps) step.approverId = remapUserId(step.approverId);
+  }
   return doc;
 }
 
@@ -95,6 +104,40 @@ export const db = {
   metadata: (id: string): Promise<DocumentMetadata | null> => {
     const doc = UPLOADS.find((d) => d.id === id) ?? DOCUMENTS.find((d) => d.id === id);
     return delay(doc ? clone(getMetadata(doc)) : null);
+  },
+  departments: (): Promise<string[]> => delay(getDepartments()),
+  addDepartment: (name: string): Promise<string[]> => delay(addDepartment(name)),
+  removeDepartment: (name: string): Promise<string[]> => delay(removeDepartment(name)),
+  responsibles: (): Promise<Record<string, string[]>> => delay(getResponsibles()),
+  setDepartmentChain: (
+    department: string,
+    approverIds: string[],
+  ): Promise<Record<string, string[]>> => {
+    setDepartmentChain(department, approverIds);
+    return delay(getResponsibles());
+  },
+  submitForApproval: (id: string): Promise<GedDocument | null> => {
+    const doc = submitForApproval(id);
+    return delay(doc ? remapDocument(clone(doc)) : null);
+  },
+  decideApproval: (
+    id: string,
+    decision: "approved" | "rejected",
+    comment?: string,
+  ): Promise<GedDocument | null> => {
+    const doc = decideApproval(id, decision, comment);
+    return delay(doc ? remapDocument(clone(doc)) : null);
+  },
+  setClassification: (
+    id: string,
+    classification: Classification,
+  ): Promise<GedDocument | null> => {
+    const doc = setClassification(id, classification);
+    return delay(doc ? remapDocument(clone(doc)) : null);
+  },
+  setPermissions: (id: string, permissions: Permission[]): Promise<GedDocument | null> => {
+    const doc = setPermissions(id, permissions);
+    return delay(doc ? remapDocument(clone(doc)) : null);
   },
   expirations: (): Promise<ExpirationItem[]> => {
     const items: ExpirationItem[] = DOCUMENTS.map((d) => ({ doc: d, meta: getMetadata(d) }))

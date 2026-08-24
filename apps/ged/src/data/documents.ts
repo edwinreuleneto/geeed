@@ -105,7 +105,7 @@ export const DOCUMENTS: GedDocument[] = [
     kind: "xlsx",
     folderId: "f-financeiro",
     classification: "restrito",
-    status: "review",
+    status: "in_approval",
     department: "Financeiro",
     ownerId: "u-marina",
     tags: ["orçamento", "planejamento", "2027"],
@@ -128,6 +128,16 @@ export const DOCUMENTS: GedDocument[] = [
       { subjectType: "user", subjectId: "u-marina", level: "edit" },
     ],
     favorite: true,
+    approval: {
+      state: "in_progress",
+      currentStep: 1,
+      submittedById: "u-edwin",
+      submittedAt: "2026-07-29T18:00:00Z",
+      steps: [
+        { order: 1, label: "Responsável da área", approverId: "u-luiz", decision: "pending" },
+        { order: 2, label: "Diretoria", approverId: "u-edwin", decision: "pending" },
+      ],
+    },
   },
   {
     id: "d-ata-diretoria",
@@ -160,7 +170,7 @@ export const DOCUMENTS: GedDocument[] = [
     id: "d-planta-galpao",
     name: "Planta Baixa — Galpão Logístico.dwg",
     kind: "cad",
-    folderId: "f-projetos",
+    folderId: "f-projetos-plantas",
     classification: "confidencial",
     status: "review",
     department: "Operações",
@@ -192,7 +202,7 @@ export const DOCUMENTS: GedDocument[] = [
     kind: "pptx",
     folderId: "f-projetos",
     classification: "interno",
-    status: "draft",
+    status: "in_approval",
     department: "Comercial",
     ownerId: "u-diego",
     tags: ["proposta", "comercial", "aurora"],
@@ -214,6 +224,15 @@ export const DOCUMENTS: GedDocument[] = [
       { subjectType: "role", subjectId: "admin", level: "owner" },
     ],
     favorite: false,
+    approval: {
+      state: "in_progress",
+      currentStep: 1,
+      submittedById: "u-luiz",
+      submittedAt: "2026-07-30T10:00:00Z",
+      steps: [
+        { order: 1, label: "Responsável", approverId: "u-edwin", decision: "pending" },
+      ],
+    },
   },
   {
     id: "d-manual-marca",
@@ -302,9 +321,9 @@ export const DOCUMENTS: GedDocument[] = [
     id: "d-aditivo-contrato",
     name: "Aditivo Contratual — Prazo.docx",
     kind: "docx",
-    folderId: "f-contratos",
+    folderId: "f-contratos-2026",
     classification: "confidencial",
-    status: "draft",
+    status: "in_approval",
     department: "Jurídico",
     ownerId: "u-rafael",
     tags: ["aditivo", "contrato", "prazo"],
@@ -317,6 +336,7 @@ export const DOCUMENTS: GedDocument[] = [
       { version: "v1", label: "Minuta", authorId: "u-rafael", at: "2026-07-29T10:30:00Z", sizeKb: 72, note: "" },
     ],
     activity: [
+      { id: "a2", actorId: "u-edwin", action: "approve", at: "2026-07-29T11:00:00Z", detail: "Enviado para aprovação" },
       { id: "a1", actorId: "u-rafael", action: "upload", at: "2026-07-29T10:30:00Z" },
     ],
     permissions: [
@@ -324,6 +344,15 @@ export const DOCUMENTS: GedDocument[] = [
       { subjectType: "role", subjectId: "admin", level: "owner" },
     ],
     favorite: false,
+    approval: {
+      state: "in_progress",
+      currentStep: 1,
+      submittedById: "u-edwin",
+      submittedAt: "2026-07-29T11:00:00Z",
+      steps: [
+        { order: 1, label: "Responsável", approverId: "u-luiz", decision: "pending" },
+      ],
+    },
   },
   {
     id: "d-relatorio-conciliacao",
@@ -352,5 +381,15 @@ export const DOCUMENTS: GedDocument[] = [
       { subjectType: "role", subjectId: "admin", level: "owner" },
     ],
     favorite: false,
+    approval: {
+      state: "approved",
+      currentStep: 3,
+      submittedById: "u-luiz",
+      submittedAt: "2026-07-15T18:00:00Z",
+      steps: [
+        { order: 1, label: "Responsável da área", approverId: "u-luiz", decision: "approved", decidedAt: "2026-07-15T18:10:00Z", comment: "Números conferidos com o extrato." },
+        { order: 2, label: "Diretoria", approverId: "u-edwin", decision: "approved", decidedAt: "2026-07-16T09:50:00Z" },
+      ],
+    },
   },
 ];

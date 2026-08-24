@@ -15,7 +15,10 @@ import { cn } from "@/lib/utils";
 const SECTION_LABEL: { match: (p: string) => boolean; label: string }[] = [
   { match: (p) => p.startsWith("/inicio"), label: "Visão geral" },
   { match: (p) => p.startsWith("/documentos"), label: "Documentos" },
+  { match: (p) => p.startsWith("/hierarquia"), label: "Hierarquia" },
+  { match: (p) => p.startsWith("/aprovacoes"), label: "Aprovações" },
   { match: (p) => p.startsWith("/seguranca"), label: "Segurança & Acesso" },
+  { match: (p) => p.startsWith("/responsaveis"), label: "Responsáveis" },
   { match: (p) => p.startsWith("/times"), label: "Times" },
   { match: (p) => p.startsWith("/conectores"), label: "Conectores" },
 ];

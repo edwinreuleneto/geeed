@@ -10,11 +10,13 @@ import { usePathname, useSearchParams } from "next/navigation";
 // Libs
 import {
   BarChart3,
+  CheckCircle2,
   ChevronDown,
   ChevronRight,
   ChevronsUpDown,
   FileSignature,
   FolderOpen,
+  FolderTree,
   Layers,
   LayoutDashboard,
   Plug,
@@ -23,6 +25,7 @@ import {
   Search,
   ShieldCheck,
   Star,
+  UserCog,
   Users,
   UsersRound,
   type LucideIcon,
@@ -35,6 +38,7 @@ import { useCommandPalette } from "@/components/CommandPalette";
 
 // Services
 import { useCurrentUserQuery, useDocumentsQuery, useFoldersQuery } from "@/services/documents";
+import { useApprovalQueue } from "@/services/approvals";
 
 // Utils
 import { cn } from "@/lib/utils";
@@ -68,6 +72,7 @@ function SidebarInner() {
   const { data: user } = useCurrentUserQuery();
   const { data: folders = [] } = useFoldersQuery();
   const { data: allDocs = [] } = useDocumentsQuery({ sort: "recent" });
+  const { data: approvalQueue = [] } = useApprovalQueue();
 
   const onDocs = pathname.startsWith("/documentos");
   const [docsOpen, setDocsOpen] = useState(onDocs);
@@ -182,7 +187,7 @@ function SidebarInner() {
                   count={favCount}
                   active={pathname === "/documentos" && fav}
                 />
-                {folders.map((folder) => {
+                {folders.filter((folder) => !folder.parentId).map((folder) => {
                   const Icon = FOLDER_ICONS[folder.icon] ?? FolderOpen;
                   return (
                     <ChildRow
@@ -200,10 +205,32 @@ function SidebarInner() {
           </li>
 
           <NavRow
+            href="/hierarquia"
+            icon={FolderTree}
+            label="Hierarquia"
+            active={pathname.startsWith("/hierarquia")}
+          />
+
+          <NavRow
+            href="/aprovacoes"
+            icon={CheckCircle2}
+            label="Aprovações"
+            active={pathname.startsWith("/aprovacoes")}
+            badge={approvalQueue.length}
+          />
+
+          <NavRow
             href="/seguranca"
             icon={ShieldCheck}
             label="Segurança & Acesso"
             active={pathname.startsWith("/seguranca")}
+          />
+
+          <NavRow
+            href="/responsaveis"
+            icon={UserCog}
+            label="Responsáveis"
+            active={pathname.startsWith("/responsaveis")}
           />
 
           <li className="px-2.5 pb-1 pt-4">
@@ -315,11 +342,13 @@ function NavRow({
   icon: Icon,
   label,
   active,
+  badge,
 }: {
   href: string;
   icon: LucideIcon;
   label: string;
   active: boolean;
+  badge?: number;
 }) {
   return (
     <li>
@@ -336,7 +365,12 @@ function NavRow({
           strokeWidth={2}
           aria-hidden="true"
         />
-        {label}
+        <span className="flex-1">{label}</span>
+        {badge && badge > 0 ? (
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1.5 text-[10.5px] font-semibold tabular-nums text-white">
+            {badge}
+          </span>
+        ) : null}
       </Link>
     </li>
   );

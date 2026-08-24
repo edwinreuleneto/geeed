@@ -4,6 +4,7 @@
 // Types
 import type {
   ActivityAction,
+  ApprovalDecision,
   Classification,
   DocumentStatus,
   PermissionLevel,
@@ -56,6 +57,12 @@ export const STATUS: Record<DocumentStatus, Tone> = {
     wrapper: "border-brand-200 bg-brand-50 text-brand-700",
     soft: "bg-brand-50 text-brand-700",
   },
+  in_approval: {
+    label: "Em aprovação",
+    dot: "bg-amber-500",
+    wrapper: "border-amber-200 bg-amber-50 text-amber-700",
+    soft: "bg-amber-50 text-amber-700",
+  },
   approved: {
     label: "Aprovado",
     dot: "bg-emerald-500",
@@ -85,4 +92,25 @@ export const PERMISSION_LABEL: Record<PermissionLevel, string> = {
   download: "Baixar",
   edit: "Editar",
   owner: "Proprietário",
+};
+
+export const APPROVAL_DECISION: Record<ApprovalDecision, Tone> = {
+  pending: {
+    label: "Pendente",
+    dot: "bg-amber-500",
+    wrapper: "border-amber-200 bg-amber-50 text-amber-700",
+    soft: "bg-amber-50 text-amber-700",
+  },
+  approved: {
+    label: "Aprovada",
+    dot: "bg-emerald-500",
+    wrapper: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    soft: "bg-emerald-50 text-emerald-700",
+  },
+  rejected: {
+    label: "Rejeitada",
+    dot: "bg-rose-500",
+    wrapper: "border-rose-200 bg-rose-50 text-rose-700",
+    soft: "bg-rose-50 text-rose-700",
+  },
 };
