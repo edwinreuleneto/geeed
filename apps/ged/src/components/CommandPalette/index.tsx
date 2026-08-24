@@ -25,6 +25,11 @@ import {
   ArrowDown,
   ArrowUp,
   Sparkles,
+  LayoutDashboard,
+  FolderTree,
+  CheckCircle2,
+  UserCog,
+  UsersRound,
 } from "lucide-react";
 
 // Components
@@ -56,8 +61,13 @@ interface NavCommand {
 }
 
 const NAV_COMMANDS: NavCommand[] = [
+  { href: "/inicio", label: "Ir para Visão geral", icon: LayoutDashboard },
   { href: "/documentos", label: "Ir para Documentos", icon: FileText },
+  { href: "/hierarquia", label: "Ir para Hierarquia", icon: FolderTree },
+  { href: "/aprovacoes", label: "Ir para Aprovações", icon: CheckCircle2 },
   { href: "/seguranca", label: "Ir para Segurança & Acesso", icon: ShieldCheck },
+  { href: "/responsaveis", label: "Ir para Responsáveis", icon: UserCog },
+  { href: "/times", label: "Ir para Times", icon: UsersRound },
   { href: "/conectores", label: "Ir para Conectores", icon: Plug },
 ];
 
