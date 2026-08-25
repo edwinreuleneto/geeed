@@ -22,10 +22,16 @@ import {
 
 // Utils
 import { cn } from "@/lib/utils";
+import { SENSITIVE_LABEL } from "@/utils/classification";
+import { STATUS } from "@/utils/labels";
 
 // Types
-import type { GedUser } from "@/types/ged";
-import type { ClassificationFilter, DocumentFilters } from "@/services/documents/documents.types";
+import type { DocumentStatus, GedUser } from "@/types/ged";
+import type {
+  ClassificationFilter,
+  DocumentFilters,
+  StatusFilter,
+} from "@/services/documents/documents.types";
 
 const CLASSIFICATIONS: { value: ClassificationFilter; label: string }[] = [
   { value: "all", label: "Toda classificação" },
@@ -48,10 +54,15 @@ export default function DocumentsExplorer() {
   const [sort, setSort] = useState<NonNullable<DocumentFilters["sort"]>>("recent");
   const [view, setView] = useState<"grid" | "list">("grid");
 
-  // A seleção de pasta vem da URL (controlada pelo menu lateral unificado).
+  // A seleção de pasta/recorte vem da URL (dashboard, menu lateral, atalhos).
   const params = useSearchParams();
   const pasta = params.get("pasta");
   const fav = params.get("fav") === "1";
+  const sensivel = params.get("sensivel") === "1";
+  const statusParam = params.get("status");
+  const status: StatusFilter | undefined = isDocumentStatus(statusParam)
+    ? statusParam
+    : undefined;
 
   const filters: DocumentFilters = {
     search,
@@ -59,6 +70,8 @@ export default function DocumentsExplorer() {
     sort,
     folderId: pasta,
     favoritesOnly: fav,
+    sensitiveOnly: sensivel,
+    status,
   };
 
   const { data: documents = [] } = useDocumentsQuery(filters);
@@ -76,18 +89,31 @@ export default function DocumentsExplorer() {
 
   const contextLabel = fav
     ? "Favoritos"
-    : pasta
-      ? (folderMap.get(pasta)?.name ?? "Pasta")
-      : "Todos os documentos";
+    : sensivel
+      ? "Documentos sensíveis"
+      : status
+        ? STATUS[status].label
+        : pasta
+          ? (folderMap.get(pasta)?.name ?? "Pasta")
+          : "Todos os documentos";
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Contexto da pasta atual */}
-      <div className="flex items-baseline gap-2">
-        <h2 className="text-[17px] font-semibold tracking-tight text-ink">{contextLabel}</h2>
-        <span className="text-[13px] text-ink-muted">
-          {documents.length} {documents.length === 1 ? "item" : "itens"}
-        </span>
+      {/* Contexto da pasta/recorte atual */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-baseline gap-2">
+          <h2 className="text-[17px] font-semibold tracking-tight text-ink">{contextLabel}</h2>
+          <span className="text-[13px] text-ink-muted">
+            {documents.length} {documents.length === 1 ? "item" : "itens"}
+          </span>
+        </div>
+        {sensivel ? (
+          <p className="text-[12px] text-ink-muted">
+            Sensível ={" "}
+            <span className="font-medium text-ink-soft">{SENSITIVE_LABEL}</span> — as duas
+            classificações mais altas.
+          </p>
+        ) : null}
       </div>
 
       {/* Toolbar */}
@@ -197,6 +223,18 @@ export default function DocumentsExplorer() {
       )}
     </div>
   );
+}
+
+const DOCUMENT_STATUSES: DocumentStatus[] = [
+  "draft",
+  "review",
+  "in_approval",
+  "approved",
+  "archived",
+];
+
+function isDocumentStatus(value: string | null): value is DocumentStatus {
+  return value != null && (DOCUMENT_STATUSES as string[]).includes(value);
 }
 
 function ViewToggle({

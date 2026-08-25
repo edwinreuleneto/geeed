@@ -20,6 +20,7 @@ import MetadataPanel from "../metadata-panel";
 import DetailTabs from "../detail-tabs";
 import AiPanel from "../ai-panel";
 import PublishButton from "../publish-button";
+import ApprovalActions from "../approval-actions";
 
 // Services
 import {
@@ -91,7 +92,7 @@ export default function DocumentDetail({ docId }: DocumentDetailProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           {publishable ? <PublishButton document={document} users={users} /> : null}
           <ActionButton disabled title="Compartilhamento em breve">
             <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
@@ -123,15 +124,23 @@ export default function DocumentDetail({ docId }: DocumentDetailProps) {
         </div>
       </div>
 
+      {/* Banner de aprovação — visível quando o usuário logado é o responsável da etapa atual */}
+      <ApprovalActions document={document} variant="banner" />
+
       {/* Conteúdo */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.6fr_1fr]">
-        <div className="min-h-[520px] lg:h-[calc(100vh-13rem)] lg:sticky lg:top-6">
+        <div className="min-h-[360px] sm:min-h-[520px] lg:h-[calc(100vh-13rem)] lg:sticky lg:top-6">
           <DocumentViewer document={document} />
         </div>
         <div className="flex flex-col gap-5">
           <AiPanel docId={document.id} now={now} />
           <MetadataPanel docId={document.id} now={now} />
-          <DetailTabs document={document} users={users} now={now} />
+          <DetailTabs
+            document={document}
+            users={users}
+            now={now}
+            defaultOpen={document.approval?.state === "in_progress"}
+          />
         </div>
       </div>
     </main>

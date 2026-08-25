@@ -4,28 +4,15 @@
 import { useMemo, useState } from "react";
 
 // Libs
-import {
-  Check,
-  ChevronDown,
-  Clock,
-  History,
-  ListChecks,
-  Loader2,
-  ShieldCheck,
-  X,
-} from "lucide-react";
+import { ChevronDown, Clock, History, ListChecks, ShieldCheck } from "lucide-react";
 
 // Components
 import UserAvatar from "@/components/UserAvatar";
 import SecurityPanel from "../security-panel";
-
-// Services
-import { useCurrentUser } from "@/services/documents";
-import { useDecideApproval } from "@/services/approvals";
+import ApprovalActions from "../approval-actions";
 
 // Utils
 import { cn } from "@/lib/utils";
-import { isPendingFor } from "@/utils/approvals";
 import { formatDateTime, formatRelative, formatSize } from "@/utils/format";
 import { ACTION_LABEL, APPROVAL_DECISION } from "@/utils/labels";
 
@@ -126,11 +113,6 @@ function ApprovalPanel({
   userMap: Map<string, GedUser>;
   now: number;
 }) {
-  const { data: currentUser } = useCurrentUser();
-  const decide = useDecideApproval();
-  const [comment, setComment] = useState("");
-  const [rejecting, setRejecting] = useState(false);
-
   const approval = document.approval;
 
   if (!approval) {
@@ -143,18 +125,6 @@ function ApprovalPanel({
         </p>
       </div>
     );
-  }
-
-  const canDecide = isPendingFor(document, currentUser);
-
-  async function apply(decision: "approved" | "rejected") {
-    if (decision === "rejected" && !comment.trim()) {
-      setRejecting(true);
-      return;
-    }
-    await decide.mutateAsync({ docId: document.id, decision, comment: comment.trim() || undefined });
-    setComment("");
-    setRejecting(false);
   }
 
   const submitter = userMap.get(approval.submittedById);
@@ -237,50 +207,8 @@ function ApprovalPanel({
         })}
       </ol>
 
-      {/* Ações do aprovador */}
-      {canDecide ? (
-        <div className="rounded-xl border border-hairline bg-surface/40 p-3">
-          <p className="mb-2 text-[12px] font-medium text-ink">Sua decisão</p>
-          <textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder={rejecting ? "Comentário obrigatório para rejeitar…" : "Comentário (opcional ao aprovar)"}
-            rows={2}
-            className={cn(
-              "w-full resize-none rounded-lg border bg-surface-elevated px-2.5 py-2 text-[12.5px] text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-brand-500/30",
-              rejecting && !comment.trim() ? "border-rose-300" : "border-hairline",
-            )}
-          />
-          <div className="mt-2 flex items-center justify-end gap-2">
-            <button
-              type="button"
-              onClick={() => apply("rejected")}
-              disabled={decide.isPending}
-              className="flex h-9 items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3.5 text-[13px] font-medium text-rose-700 transition-colors hover:bg-rose-100 disabled:opacity-60"
-            >
-              {decide.isPending ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-              ) : (
-                <X className="h-3.5 w-3.5" aria-hidden="true" />
-              )}
-              Rejeitar
-            </button>
-            <button
-              type="button"
-              onClick={() => apply("approved")}
-              disabled={decide.isPending}
-              className="flex h-9 items-center gap-2 rounded-full bg-emerald-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
-            >
-              {decide.isPending ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-              ) : (
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-              )}
-              Aprovar
-            </button>
-          </div>
-        </div>
-      ) : null}
+      {/* Ações do aprovador (compartilhado com o banner do topo) */}
+      <ApprovalActions document={document} variant="inline" />
     </div>
   );
 }

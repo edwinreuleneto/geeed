@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 // Libs
-import { ArrowUpRight, CalendarClock } from "lucide-react";
+import { ArrowUpRight, CalendarClock, CheckCircle2, FolderOpen, ShieldAlert } from "lucide-react";
 
 // Components
 import AvatarStack from "@/components/AvatarStack";
@@ -20,6 +20,7 @@ import { useCurrentUser, useDocuments, useExpirations, useUsers } from "@/servic
 import { useTeams } from "@/services/teams";
 
 // Utils
+import { isSensitive, SENSITIVE_LABEL } from "@/utils/classification";
 import { formatRelative } from "@/utils/format";
 import { greeting } from "@/utils/greeting";
 import { ACTION_LABEL } from "@/utils/labels";
@@ -89,11 +90,10 @@ export default function Dashboard() {
 
   const stats = useMemo(() => {
     const review = documents.filter((d) => d.status === "review").length;
-    const sensitive = documents.filter(
-      (d) => d.classification === "confidencial" || d.classification === "restrito",
-    ).length;
+    const inApproval = documents.filter((d) => d.status === "in_approval").length;
+    const sensitive = documents.filter(isSensitive).length;
     const favs = documents.filter((d) => d.favorite).length;
-    return { total: documents.length, review, sensitive, favs };
+    return { total: documents.length, review, inApproval, sensitive, favs };
   }, [documents]);
 
   const firstName = currentUser.name.split(" ")[0];
@@ -115,12 +115,36 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* KPIs — numerais grandes */}
-      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline lg:grid-cols-4">
+      {/* KPIs — numerais grandes. Cada card leva à lista que contém exatamente esse total. */}
+      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline lg:grid-cols-5">
         <Kpi label="Documentos" value={stats.total} href="/documentos" />
-        <Kpi label="Em revisão" value={stats.review} href="/documentos" accent="#ff9f0a" />
-        <Kpi label="Sensíveis" value={stats.sensitive} href="/seguranca" accent="#ff3b30" />
-        <Kpi label="Favoritos" value={stats.favs} href="/documentos" accent="#0071e3" />
+        <Kpi label="Em revisão" value={stats.review} href="/documentos?status=review" accent="#ff9f0a" />
+        <Kpi
+          label="Em aprovação"
+          value={stats.inApproval}
+          href="/documentos?status=in_approval"
+          accent="#ffcc00"
+        />
+        <Kpi
+          label="Sensíveis"
+          value={stats.sensitive}
+          href="/documentos?sensivel=1"
+          accent="#ff3b30"
+          hint={SENSITIVE_LABEL}
+        />
+        <Kpi label="Favoritos" value={stats.favs} href="/documentos?fav=1" accent="#0071e3" />
+      </div>
+
+      {/* Atalhos rápidos */}
+      <div className="flex flex-wrap gap-2">
+        <Shortcut
+          href="/aprovacoes"
+          icon={CheckCircle2}
+          label="Documentos para aprovação"
+          badge={stats.inApproval}
+        />
+        <Shortcut href="/documentos?sensivel=1" icon={ShieldAlert} label="Documentos sensíveis" />
+        <Shortcut href="/documentos" icon={FolderOpen} label="Todos os documentos" />
       </div>
 
       {/* Bento */}
@@ -194,14 +218,20 @@ function Kpi({
   value,
   href,
   accent,
+  hint,
 }: {
   label: string;
   value: number;
   href: string;
   accent?: string;
+  hint?: string;
 }) {
   return (
-    <Link href={href} className="group relative bg-surface-elevated p-5 transition-colors hover:bg-surface-alt">
+    <Link
+      href={href}
+      title={hint}
+      className="group relative bg-surface-elevated p-5 transition-colors hover:bg-surface-alt"
+    >
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2 text-[12px] font-medium text-ink-muted">
           {accent ? (
@@ -214,6 +244,36 @@ function Kpi({
         <ArrowUpRight className="h-4 w-4 text-ink-faint opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" />
       </div>
       <p className="display mt-3 text-[2.25rem] font-semibold leading-none text-ink">{value}</p>
+      {hint ? <p className="mt-1.5 text-[11px] text-ink-faint">{hint}</p> : null}
+    </Link>
+  );
+}
+
+/* --- Atalhos --------------------------------------------------------------- */
+
+function Shortcut({
+  href,
+  icon: Icon,
+  label,
+  badge,
+}: {
+  href: string;
+  icon: typeof CheckCircle2;
+  label: string;
+  badge?: number;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-elevated px-3.5 py-2 text-[12.5px] font-medium text-ink-soft transition-colors hover:border-brand-200 hover:text-ink"
+    >
+      <Icon className="h-3.5 w-3.5 text-ink-faint transition-colors group-hover:text-brand-600" aria-hidden="true" />
+      {label}
+      {badge && badge > 0 ? (
+        <span className="ml-0.5 rounded-full bg-brand-50 px-1.5 py-0.5 text-[10.5px] font-semibold tabular-nums text-brand-700">
+          {badge}
+        </span>
+      ) : null}
     </Link>
   );
 }

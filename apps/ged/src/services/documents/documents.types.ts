@@ -16,5 +16,7 @@ export interface DocumentFilters {
   status?: StatusFilter;
   department?: DepartmentFilter;
   favoritesOnly?: boolean;
+  /** Apenas documentos sensíveis (classificação Confidencial ou Restrito). */
+  sensitiveOnly?: boolean;
   sort?: "recent" | "name" | "size";
 }

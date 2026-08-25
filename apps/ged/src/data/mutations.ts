@@ -7,6 +7,7 @@ import { DOCUMENTS } from "./documents";
 import { UPLOADS } from "./uploads";
 import { CURRENT_USER_ID } from "./users";
 import { getChain, stepLabel } from "./responsibles";
+import { saveState } from "./persistence";
 
 // Types
 import type {
@@ -63,6 +64,7 @@ export function submitForApproval(id: string): GedDocument | null {
   doc.status = "in_approval";
   doc.updatedAt = nowIso;
   pushActivity(doc, "Enviado para aprovação", nowIso);
+  saveState();
   return doc;
 }
 
@@ -99,6 +101,7 @@ export function decideApproval(
   }
 
   doc.updatedAt = nowIso;
+  saveState();
   return doc;
 }
 
@@ -114,6 +117,7 @@ export function setClassification(
   doc.classification = classification;
   doc.updatedAt = nowIso;
   pushActivity(doc, `Classificação alterada para ${classification}`, nowIso, "permission");
+  saveState();
   return doc;
 }
 
@@ -126,5 +130,6 @@ export function setPermissions(id: string, permissions: Permission[]): GedDocume
   doc.permissions = permissions.map((p) => ({ ...p }));
   doc.updatedAt = nowIso;
   pushActivity(doc, "Permissões atualizadas", nowIso, "permission");
+  saveState();
   return doc;
 }

@@ -12,6 +12,7 @@ import { db } from "@/data";
 
 // Utils
 import { canView } from "@/utils/access";
+import { isSensitive } from "@/utils/classification";
 
 // Types
 import type { Classification, GedDocument, GedUser, Permission } from "@/types/ged";
@@ -54,6 +55,9 @@ function applyFilters(
   }
   if (filters.favoritesOnly) {
     result = result.filter((doc) => doc.favorite);
+  }
+  if (filters.sensitiveOnly) {
+    result = result.filter((doc) => isSensitive(doc));
   }
   if (term) {
     result = result.filter(

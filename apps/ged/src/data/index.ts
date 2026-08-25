@@ -14,6 +14,7 @@ import { UPLOADS } from "./uploads";
 import { getResponsibles, setDepartmentChain } from "./responsibles";
 import { getDepartments, addDepartment, removeDepartment } from "./departments";
 import { submitForApproval, decideApproval, setClassification, setPermissions } from "./mutations";
+import { ensureHydrated } from "./persistence";
 
 // Types
 import type {
@@ -84,11 +85,14 @@ function remapTeam(team: MsTeam): MsTeam {
 }
 
 export const db = {
-  documents: (): Promise<GedDocument[]> =>
-    delay(clone([...UPLOADS, ...DOCUMENTS]).map(remapDocument)),
+  documents: (): Promise<GedDocument[]> => {
+    ensureHydrated();
+    return delay(clone([...UPLOADS, ...DOCUMENTS]).map(remapDocument));
+  },
   // Retorna null (não undefined) quando não encontrado: useSuspenseQuery rejeita
   // `data: undefined`, mas aceita `null` — o que permite tratar 404 na UI.
   document: (id: string): Promise<GedDocument | null> => {
+    ensureHydrated();
     const found = UPLOADS.find((d) => d.id === id) ?? DOCUMENTS.find((d) => d.id === id);
     return delay(found ? remapDocument(clone(found)) : null);
   },
