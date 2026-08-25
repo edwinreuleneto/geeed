@@ -5,7 +5,7 @@ import { Suspense, useState } from "react";
 
 // Next
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 // Libs
 import {
@@ -19,6 +19,7 @@ import {
   FolderTree,
   Layers,
   LayoutDashboard,
+  LogOut,
   Plug,
   Receipt,
   Ruler,
@@ -42,6 +43,7 @@ import { useApprovalQueue } from "@/services/approvals";
 
 // Utils
 import { cn } from "@/lib/utils";
+import { logout } from "@/lib/auth";
 
 const FOLDER_ICONS: Record<string, LucideIcon> = {
   FileSignature,
@@ -68,7 +70,13 @@ export default function Sidebar() {
 function SidebarInner() {
   const pathname = usePathname() ?? "";
   const params = useSearchParams();
+  const router = useRouter();
   const { open } = useCommandPalette();
+
+  function handleLogout() {
+    logout();
+    router.replace("/login");
+  }
   const { data: user } = useCurrentUserQuery();
   const { data: folders = [] } = useFoldersQuery();
   const { data: allDocs = [] } = useDocumentsQuery({ sort: "recent" });
@@ -98,7 +106,7 @@ function SidebarInner() {
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] text-[15px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22)]"
             style={{ backgroundImage: "linear-gradient(140deg, #0a84ff 0%, #0071e3 55%, #0058b0 100%)" }}
           >
-            C
+            M
           </span>
           <span className="flex min-w-0 flex-1 flex-col items-start leading-none">
             <span className="text-[15px] font-semibold tracking-tight text-ink">MinimalTech</span>
@@ -323,7 +331,15 @@ function SidebarInner() {
                 <p className="truncate text-[13.5px] font-medium text-ink">{user.name}</p>
                 <p className="truncate text-[11.5px] text-ink-muted">{user.email}</p>
               </div>
-              <ChevronsUpDown className="h-4 w-4 text-ink-faint" aria-hidden="true" />
+              <button
+                type="button"
+                onClick={handleLogout}
+                aria-label="Sair"
+                title="Sair"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-ink-faint transition-colors hover:bg-black/[0.06] hover:text-ink"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+              </button>
             </>
           ) : (
             <div className="flex items-center gap-2.5">

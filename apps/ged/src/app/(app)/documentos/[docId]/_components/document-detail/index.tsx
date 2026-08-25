@@ -8,7 +8,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 // Libs
-import { ArrowLeft, Download, Lock, Pencil, Share2, Star } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Lock, Pencil, Share2, Star } from "lucide-react";
 
 // Components
 import DocTypeIcon from "@/components/DocTypeIcon";
@@ -93,6 +93,15 @@ export default function DocumentDetail({ docId }: DocumentDetailProps) {
         </div>
 
         <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+          <a
+            href={`/doc/${document.id}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex h-9 items-center gap-2 rounded-lg border border-hairline bg-surface-elevated px-3 text-[13px] font-medium text-ink-soft transition-colors hover:border-brand-200 hover:text-ink"
+          >
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            Abrir doc
+          </a>
           {publishable ? <PublishButton document={document} users={users} /> : null}
           <ActionButton disabled title="Compartilhamento em breve">
             <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
