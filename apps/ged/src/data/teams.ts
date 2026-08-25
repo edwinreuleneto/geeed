@@ -2,6 +2,9 @@
 // Cada Team é um Grupo do M365 com um site do SharePoint por trás; cada canal vira uma
 // pasta na biblioteca de documentos. Ver docs/domain/connectors/sharepoint.md.
 
+// Types
+import type { Department } from "@/types/ged";
+
 export type TeamVisibility = "private" | "public";
 export type ChannelKind = "standard" | "private" | "shared";
 export type Sensitivity = "Público" | "Interno" | "Confidencial" | "Altamente Confidencial";
@@ -22,6 +25,8 @@ export interface MsTeam {
   memberIds: string[];
   channels: TeamChannel[];
   libraryName: string;
+  /** Departamento cujos documentos a biblioteca do time reúne (para navegação interna). */
+  department?: Department;
   siteUrl: string;
   itemCount: number;
   storageMb: number;
@@ -45,6 +50,7 @@ export const TEAMS: MsTeam[] = [
       { name: "Orçamento 2027", kind: "private" },
     ],
     libraryName: "Documentos - Financeiro",
+    department: "Financeiro",
     siteUrl: "https://minimaltech.sharepoint.com/sites/financeiro",
     itemCount: 312,
     storageMb: 1840,
@@ -66,6 +72,7 @@ export const TEAMS: MsTeam[] = [
       { name: "Assinaturas", kind: "shared" },
     ],
     libraryName: "Documentos - Jurídico",
+    department: "Jurídico",
     siteUrl: "https://minimaltech.sharepoint.com/sites/juridico",
     itemCount: 486,
     storageMb: 2610,
@@ -87,6 +94,7 @@ export const TEAMS: MsTeam[] = [
       { name: "Cliente Aurora", kind: "private" },
     ],
     libraryName: "Documentos - Comercial",
+    department: "Comercial",
     siteUrl: "https://minimaltech.sharepoint.com/sites/comercial",
     itemCount: 208,
     storageMb: 3120,
@@ -108,6 +116,7 @@ export const TEAMS: MsTeam[] = [
       { name: "Plantas", kind: "standard" },
     ],
     libraryName: "Documentos - Operações",
+    department: "Operações",
     siteUrl: "https://minimaltech.sharepoint.com/sites/operacoes",
     itemCount: 174,
     storageMb: 5240,
@@ -149,6 +158,7 @@ export const TEAMS: MsTeam[] = [
       { name: "Políticas", kind: "standard" },
     ],
     libraryName: "Documentos - RH",
+    department: "RH",
     siteUrl: "https://minimaltech.sharepoint.com/sites/rh",
     itemCount: 143,
     storageMb: 980,

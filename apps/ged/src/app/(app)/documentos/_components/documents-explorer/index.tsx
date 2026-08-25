@@ -26,7 +26,7 @@ import { SENSITIVE_LABEL } from "@/utils/classification";
 import { STATUS } from "@/utils/labels";
 
 // Types
-import type { DocumentStatus, GedUser } from "@/types/ged";
+import type { Department, DocumentStatus, GedUser } from "@/types/ged";
 import type {
   ClassificationFilter,
   DocumentFilters,
@@ -63,6 +63,8 @@ export default function DocumentsExplorer() {
   const status: StatusFilter | undefined = isDocumentStatus(statusParam)
     ? statusParam
     : undefined;
+  const deptParam = params.get("depto");
+  const department: Department | undefined = isDepartment(deptParam) ? deptParam : undefined;
 
   const filters: DocumentFilters = {
     search,
@@ -72,6 +74,7 @@ export default function DocumentsExplorer() {
     favoritesOnly: fav,
     sensitiveOnly: sensivel,
     status,
+    department,
   };
 
   const { data: documents = [] } = useDocumentsQuery(filters);
@@ -91,11 +94,13 @@ export default function DocumentsExplorer() {
     ? "Favoritos"
     : sensivel
       ? "Documentos sensíveis"
-      : status
-        ? STATUS[status].label
-        : pasta
-          ? (folderMap.get(pasta)?.name ?? "Pasta")
-          : "Todos os documentos";
+      : department
+        ? department
+        : status
+          ? STATUS[status].label
+          : pasta
+            ? (folderMap.get(pasta)?.name ?? "Pasta")
+            : "Todos os documentos";
 
   return (
     <div className="flex flex-col gap-4">
@@ -235,6 +240,19 @@ const DOCUMENT_STATUSES: DocumentStatus[] = [
 
 function isDocumentStatus(value: string | null): value is DocumentStatus {
   return value != null && (DOCUMENT_STATUSES as string[]).includes(value);
+}
+
+const DEPARTMENTS: Department[] = [
+  "Financeiro",
+  "Jurídico",
+  "RH",
+  "Comercial",
+  "Operações",
+  "TI",
+];
+
+function isDepartment(value: string | null): value is Department {
+  return value != null && (DEPARTMENTS as string[]).includes(value);
 }
 
 function ViewToggle({

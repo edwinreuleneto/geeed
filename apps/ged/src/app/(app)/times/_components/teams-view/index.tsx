@@ -3,9 +3,12 @@
 // React
 import { useMemo, useState } from "react";
 
+// Next
+import Link from "next/link";
+
 // Libs
 import {
-  ExternalLink,
+  FolderOpen,
   Hash,
   HardDrive,
   Lock,
@@ -172,15 +175,17 @@ function TeamCard({
           {team.itemCount} itens · {(team.storageMb / 1024).toFixed(1)} GB
         </span>
         <span className="text-ink-faint">atividade {formatRelative(team.lastActivityAt, now)}</span>
-        <a
-          href={team.siteUrl}
-          target="_blank"
-          rel="noreferrer"
+        <Link
+          href={
+            team.department
+              ? `/documentos?depto=${encodeURIComponent(team.department)}`
+              : "/documentos"
+          }
           className="ml-auto inline-flex items-center gap-1 text-brand-600 hover:underline"
         >
           {team.libraryName}
-          <ExternalLink className="h-3 w-3" aria-hidden="true" />
-        </a>
+          <FolderOpen className="h-3 w-3" aria-hidden="true" />
+        </Link>
       </div>
     </section>
   );

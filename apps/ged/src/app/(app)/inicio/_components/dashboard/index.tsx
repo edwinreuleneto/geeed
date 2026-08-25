@@ -122,7 +122,7 @@ export default function Dashboard() {
         <Kpi
           label="Em aprovação"
           value={stats.inApproval}
-          href="/documentos?status=in_approval"
+          href="/aprovacoes"
           accent="#ffcc00"
         />
         <Kpi
