@@ -17,6 +17,7 @@ import UserAvatar from "@/components/UserAvatar";
 
 // Services
 import { useCurrentUser, useDocuments, useExpirations, useUsers } from "@/services/documents";
+import { useApprovalQueue } from "@/services/approvals";
 import { useTeams } from "@/services/teams";
 
 // Utils
@@ -48,6 +49,10 @@ export default function Dashboard() {
   const { data: currentUser } = useCurrentUser();
   const { data: teams } = useTeams();
   const { data: expirations } = useExpirations();
+  const { data: approvalQueue = [] } = useApprovalQueue();
+
+  // Pendentes = documentos aguardando a SUA decisão (mesma fila do menu e da tela /aprovacoes).
+  const pending = approvalQueue.length;
 
   const storage = useMemo(() => {
     const usedGb = teams.reduce((s, t) => s + t.storageMb, 0) / 1024;
@@ -90,10 +95,9 @@ export default function Dashboard() {
 
   const stats = useMemo(() => {
     const review = documents.filter((d) => d.status === "review").length;
-    const inApproval = documents.filter((d) => d.status === "in_approval").length;
     const sensitive = documents.filter(isSensitive).length;
     const favs = documents.filter((d) => d.favorite).length;
-    return { total: documents.length, review, inApproval, sensitive, favs };
+    return { total: documents.length, review, sensitive, favs };
   }, [documents]);
 
   const firstName = currentUser.name.split(" ")[0];
@@ -120,10 +124,11 @@ export default function Dashboard() {
         <Kpi label="Documentos" value={stats.total} href="/documentos" />
         <Kpi label="Em revisão" value={stats.review} href="/documentos?status=review" accent="#ff9f0a" />
         <Kpi
-          label="Em aprovação"
-          value={stats.inApproval}
+          label="Pendentes"
+          value={pending}
           href="/aprovacoes"
           accent="#ffcc00"
+          hint="Aguardando sua decisão"
         />
         <Kpi
           label="Sensíveis"
@@ -141,7 +146,7 @@ export default function Dashboard() {
           href="/aprovacoes"
           icon={CheckCircle2}
           label="Documentos para aprovação"
-          badge={stats.inApproval}
+          badge={pending}
         />
         <Shortcut href="/documentos?sensivel=1" icon={ShieldAlert} label="Documentos sensíveis" />
         <Shortcut href="/documentos" icon={FolderOpen} label="Todos os documentos" />
