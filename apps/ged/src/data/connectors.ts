@@ -30,8 +30,8 @@ export interface ConnectorStatus {
 export const SHAREPOINT_CONNECTOR: ConnectorStatus = {
   id: "conn-sharepoint",
   provider: "SharePoint Online",
-  siteName: "Campolongo — Portal Corporativo",
-  siteUrl: "https://campolongo.sharepoint.com/sites/portal",
+  siteName: "MinimalTech — Portal Corporativo",
+  siteUrl: "https://minimaltech.sharepoint.com/sites/portal",
   health: "healthy",
   connectedSince: "2026-04-01T12:00:00Z",
   lastSyncAt: "2026-07-30T08:45:00Z",

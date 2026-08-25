@@ -1,4 +1,4 @@
-// Usuários semente do GED (mock) — equipe da Campolongo por departamento.
+// Usuários semente do GED (mock) — equipe da MinimalTech por departamento.
 
 // Types
 import type { GedUser } from "@/types/ged";
@@ -6,8 +6,8 @@ import type { GedUser } from "@/types/ged";
 export const USERS: GedUser[] = [
   {
     id: "u-luiz",
-    name: "Luiz Campolongo",
-    email: "luiz.campolongo@campolongo.com.br",
+    name: "Luiz MinimalTech",
+    email: "luiz.minimaltech@minimaltech.com.br",
     role: "admin",
     department: "Comercial",
     initials: "LC",
@@ -17,7 +17,7 @@ export const USERS: GedUser[] = [
   {
     id: "u-edwin",
     name: "Edwin Reule",
-    email: "edwin.reule@campolongo.com.br",
+    email: "edwin.reule@minimaltech.com.br",
     role: "admin",
     department: "TI",
     initials: "ER",
@@ -27,7 +27,7 @@ export const USERS: GedUser[] = [
   {
     id: "u-rafael",
     name: "Rafael Costa",
-    email: "rafael.costa@campolongo.com.br",
+    email: "rafael.costa@minimaltech.com.br",
     role: "editor",
     department: "Jurídico",
     initials: "RC",
@@ -37,7 +37,7 @@ export const USERS: GedUser[] = [
   {
     id: "u-marina",
     name: "Marina Alves",
-    email: "marina.alves@campolongo.com.br",
+    email: "marina.alves@minimaltech.com.br",
     role: "editor",
     department: "Financeiro",
     initials: "MA",
@@ -47,7 +47,7 @@ export const USERS: GedUser[] = [
   {
     id: "u-bianca",
     name: "Bianca Rocha",
-    email: "bianca.rocha@campolongo.com.br",
+    email: "bianca.rocha@minimaltech.com.br",
     role: "editor",
     department: "RH",
     initials: "BR",
@@ -57,7 +57,7 @@ export const USERS: GedUser[] = [
   {
     id: "u-lucia",
     name: "Lúcia Ferraz",
-    email: "lucia.ferraz@campolongo.com.br",
+    email: "lucia.ferraz@minimaltech.com.br",
     role: "editor",
     department: "Operações",
     initials: "LF",
@@ -67,7 +67,7 @@ export const USERS: GedUser[] = [
   {
     id: "u-diego",
     name: "Diego Santos",
-    email: "diego.santos@campolongo.com.br",
+    email: "diego.santos@minimaltech.com.br",
     role: "editor",
     department: "Comercial",
     initials: "DS",

@@ -20,7 +20,7 @@ export default function DocumentosPage() {
         <PageHeading
           eyebrow="Biblioteca"
           title="Documentos"
-          subtitle="Todo o acervo da Campolongo em um só lugar — seguro, versionado e conectado ao SharePoint."
+          subtitle="Todo o acervo da MinimalTech em um só lugar — seguro, versionado e conectado ao SharePoint."
           actions={<UploadButton />}
         />
         <Suspense fallback={<div className="h-64 animate-pulse rounded-[18px] bg-black/5" />}>
