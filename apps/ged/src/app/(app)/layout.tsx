@@ -1,6 +1,12 @@
 // Components
 import AppShell from "@/components/AppShell";
+import DemoReset from "@/components/DemoReset";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  return <AppShell>{children}</AppShell>;
+  return (
+    <>
+      <DemoReset />
+      <AppShell>{children}</AppShell>
+    </>
+  );
 }
